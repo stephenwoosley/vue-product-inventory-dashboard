@@ -6,7 +6,7 @@ import ProductTable from './components/ProductTable.vue';
 
 <template>
   <div class="app-container">
-    <h1>Product Inventory Dashboard</h1>
+    <h1>Baseball Product Inventory Dashboard</h1>
     <ProductForm />
     <ProductFilters />
     <ProductTable />
