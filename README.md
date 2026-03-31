@@ -2,7 +2,9 @@
 
 A single-page product inventory manager built with Vue 3 and Pinia.
 
-## Setup
+**Live demo:** https://vue-product-inventory-dashboard.vercel.app/
+
+## Setup - to run locally
 
 ```sh
 npm install
@@ -31,19 +33,17 @@ npm run build
 
 ## Design decisions
 
-**Composition API everywhere.** Both the store and all components use the setup syntax with `ref()` and `computed()`. I went with this over the Options API for consistency — one mental model across the whole app.
+**Composition API** Both the store and all components use the setup syntax with `ref()` and `computed()`.
 
-**Single Pinia store.** All product data and filter state lives in one store (`src/stores/products.js`). Filter state is in the store rather than in the Filters component because the ProductTable needs to read it too (through the `filteredProducts` getter). Keeping it in one place avoids prop drilling.
+**Single Pinia store** All product data and filter state lives in one store (`src/stores/products.js`). Filter state is in the store rather than in the Filters component because the ProductTable needs to read it too.
 
-**Thin components.** Components import the store, bind to its state, and call its actions. Filtering, sorting, and validation logic stays in the store or in action functions — not scattered across templates.
+**Thin components** Components import the store, bind to its state, and call its actions. Filtering, sorting, and validation logic stays in the store.
 
-**`filteredProducts` as a single computed getter.** Rather than chaining separate getters for category/search/stock/sort, one getter handles the full pipeline. It reads all the filter refs, so Vue recomputes it whenever any filter changes. The `[...result].sort()` spread avoids mutating the source array.
+**localStorage via `watch`** A watcher on the products array writes to localStorage on any change. On load, the store checks localStorage first and falls back to mock data.
 
-**localStorage via `watch`.** A deep watcher on the products array writes to localStorage on any change. On load, the store checks localStorage first and falls back to mock data. This is simple and works fine for a small dataset. For a larger app I'd use a Pinia plugin instead.
+**Mock data in a separate file** `src/data/mockProducts.js` keeps seed data out of the store.
 
-**Mock data in a separate file.** `src/data/mockProducts.js` keeps seed data out of the store. The `loadInitialProducts` action wraps it in a Promise with setTimeout to simulate an API call, which let me build proper loading/error states.
-
-**Inline stock editing.** Clicking a stock number swaps it for an input with save/cancel buttons. The edit state (`editingId`, `editingStock`) is local to ProductTable since no other component needs it.
+**Inline stock editing** Clicking a stock number swaps it for an input with save/cancel buttons.
 
 ## Project structure
 
